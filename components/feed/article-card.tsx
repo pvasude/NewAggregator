@@ -1,91 +1,98 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import { Bookmark, BookmarkCheck, ExternalLink, Newspaper } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Bookmark, BookmarkCheck, ArrowUpRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { Article } from "@/lib/data";
 
 interface ArticleCardProps {
   article: Article;
+  bookmarked: boolean;
+  onBookmark: (id: number) => void;
 }
 
-export function ArticleCard({ article }: ArticleCardProps) {
-  const [saved, setSaved] = useState(false);
+export function ArticleCard({ article, bookmarked, onBookmark }: ArticleCardProps) {
+  const [imgError, setImgError] = useState(false);
+  const showPlaceholder = !article.imageUrl || imgError;
 
   return (
-    <Card className="group flex flex-col overflow-hidden transition-shadow hover:shadow-md h-full">
+    <article className="bg-white border border-stone-200 rounded-xl p-4 flex flex-col sm:flex-row-reverse gap-4">
       {/* Thumbnail */}
-      <div className="relative aspect-video overflow-hidden bg-muted">
-        {article.imageUrl ? (
-          <Image
-            src={article.imageUrl}
-            alt={article.title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+      <div className="w-full aspect-video sm:w-[240px] sm:h-[135px] sm:aspect-auto shrink-0 rounded-lg overflow-hidden">
+        {showPlaceholder ? (
+          <div className="w-full h-full thumbnail-placeholder" />
         ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <Newspaper className="h-12 w-12 text-muted-foreground/30" />
-          </div>
+          <img
+            src={article.imageUrl ?? ""}
+            alt={article.title}
+            className="w-full h-full object-cover"
+            onError={() => setImgError(true)}
+          />
         )}
       </div>
 
-      <CardHeader className="px-4 pt-4 pb-2 gap-2">
-        {/* Source */}
-        <span
-          className="text-xs font-semibold uppercase tracking-wide"
-          style={{ color: article.sourceColor }}
-        >
-          {article.source}
-        </span>
+      {/* Content */}
+      <div className="flex-1 min-w-0 flex flex-col gap-2">
+        {/* Source badge */}
+        <div>
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-stone-200 text-xs text-stone-500">
+            <span
+              className="w-1.5 h-1.5 rounded-full shrink-0"
+              style={{ backgroundColor: article.sourceColor }}
+            />
+            {article.source}
+          </span>
+        </div>
 
-        {/* Title */}
+        {/* Headline */}
         <a
           href={article.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-semibold leading-snug line-clamp-2 group-hover:text-primary transition-colors"
+          className="font-serif text-stone-900 text-base leading-snug hover:text-terracotta transition-colors line-clamp-2"
         >
           {article.title}
         </a>
-      </CardHeader>
 
-      <CardContent className="px-4 pb-2 flex-1">
-        <p className="text-sm text-muted-foreground line-clamp-2">
+        {/* Summary */}
+        <p className="text-sm text-stone-600 leading-relaxed line-clamp-2">
           {article.description}
         </p>
-      </CardContent>
 
-      <CardFooter className="px-4 pt-0 pb-4 flex items-center justify-between gap-2">
-        <span className="text-xs text-muted-foreground">{article.publishedAt}</span>
+        {/* Footer */}
+        <div className="flex items-center justify-between mt-auto pt-1">
+          <span className="font-mono text-stone-400 text-[11px] uppercase tracking-wide">
+            {article.publishedAt}
+          </span>
 
-        <div className="flex items-center gap-1 shrink-0">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => setSaved(!saved)}
-          >
-            {saved ? (
-              <BookmarkCheck className="h-4 w-4 text-primary" />
-            ) : (
-              <Bookmark className="h-4 w-4" />
-            )}
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-            <a href={article.url} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="h-4 w-4" />
+          <div className="flex items-center gap-0.5">
+            <button
+              onClick={() => onBookmark(article.id)}
+              className={cn(
+                "p-1.5 rounded hover:bg-stone-100 transition-colors",
+                bookmarked ? "text-stone-900" : "text-stone-400 hover:text-stone-600"
+              )}
+              aria-label={bookmarked ? "Remove bookmark" : "Bookmark article"}
+            >
+              {bookmarked ? (
+                <BookmarkCheck className="h-4 w-4 fill-current" />
+              ) : (
+                <Bookmark className="h-4 w-4" />
+              )}
+            </button>
+
+            <a
+              href={article.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-0.5 px-2 py-1.5 rounded text-xs text-stone-500 hover:bg-stone-100 hover:text-stone-700 transition-colors"
+            >
+              Open
+              <ArrowUpRight className="h-3 w-3" />
             </a>
-          </Button>
+          </div>
         </div>
-      </CardFooter>
-    </Card>
+      </div>
+    </article>
   );
 }

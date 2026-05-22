@@ -54,6 +54,27 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: oklch(0.985 0.003 75);
+    @apply text-foreground;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .thumbnail-placeholder {
+    background-image: repeating-linear-gradient(
+      45deg,
+      theme(colors.stone.100),
+      theme(colors.stone.100) 10px,
+      theme(colors.stone.200) 10px,
+      theme(colors.stone.200) 20px
+    );
   }
 }

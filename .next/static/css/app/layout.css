@@ -669,6 +669,12 @@ video {
     background-color: oklch(0.985 0.003 75);
     color: hsl(var(--foreground));
   }
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
+}
 .sticky {
   position: sticky;
 }
@@ -703,6 +709,9 @@ video {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+.block {
+  display: block;
 }
 .flex {
   display: flex;

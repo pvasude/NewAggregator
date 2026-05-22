@@ -9,6 +9,7 @@ module.exports = {
   testMatch: [
     '<rootDir>/prisma/__tests__/**/*.test.ts',
     '<rootDir>/lib/__tests__/**/*.test.ts',
+    '<rootDir>/app/__tests__/**/*.test.ts',
   ],
   transform: {
     '^.+\\.tsx?$': [
@@ -19,8 +20,10 @@ module.exports = {
       },
     ],
   },
-  // Map bare .js relative imports to their actual .ts sources (ESM interop)
+  // Map bare .js relative imports to their actual .ts sources (ESM interop).
+  // Also map the Next.js @/ path alias used by app/ route handlers.
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
+    '^@/(.*)$': '<rootDir>/$1',
   },
 };

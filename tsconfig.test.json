@@ -7,8 +7,11 @@
     "lib": ["ES2022"],
     "strict": true,
     "skipLibCheck": true,
-    "noEmit": false
+    "noEmit": false,
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
-  "include": ["prisma/__tests__/**/*.ts", "lib/**/*.ts"],
+  "include": ["prisma/__tests__/**/*.ts", "lib/**/*.ts", "app/**/*.ts"],
   "exclude": ["node_modules", ".next"]
 }

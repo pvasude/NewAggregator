@@ -30,42 +30,39 @@ function makeArticle(overrides: Partial<ParsedArticle> = {}): ParsedArticle {
 }
 
 // ---------------------------------------------------------------------------
-// Setup / teardown
-// ---------------------------------------------------------------------------
-
-let sourceId: number;
-
-beforeEach(async () => {
-  await prisma.article.deleteMany();
-  await prisma.source.deleteMany();
-
-  const source = await prisma.source.create({
-    data: {
-      name: 'BBC News',
-      url: 'https://feeds.bbci.co.uk/news/rss.xml',
-      language: 'en',
-      sourceColor: '#BB1919',
-    },
-  });
-  sourceId = source.id;
-});
-
-afterEach(async () => {
-  await prisma.article.deleteMany();
-  await prisma.source.deleteMany();
-});
-
-afterAll(async () => {
-  await prisma.article.deleteMany();
-  await prisma.source.deleteMany();
-  await prisma.$disconnect();
-});
-
-// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
 describe('saveArticles', () => {
+  // sourceId is scoped here and assigned fresh in every beforeEach
+  let sourceId: number;
+
+  beforeEach(async () => {
+    await prisma.article.deleteMany();
+    await prisma.source.deleteMany();
+
+    const source = await prisma.source.create({
+      data: {
+        name: 'BBC News',
+        url: 'https://feeds.bbci.co.uk/news/rss.xml',
+        language: 'en',
+        sourceColor: '#BB1919',
+      },
+    });
+    sourceId = source.id;
+  });
+
+  afterEach(async () => {
+    await prisma.article.deleteMany();
+    await prisma.source.deleteMany();
+  });
+
+  afterAll(async () => {
+    await prisma.article.deleteMany();
+    await prisma.source.deleteMany();
+    await prisma.$disconnect();
+  });
+
   // --- 1. Saves new articles ---
 
   describe('saving new articles', () => {

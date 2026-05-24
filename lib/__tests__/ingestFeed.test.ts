@@ -100,7 +100,14 @@ beforeEach(async () => {
   mockSave.mockReset();
 });
 
+afterEach(async () => {
+  await prisma.article.deleteMany();
+  await prisma.source.deleteMany();
+});
+
 afterAll(async () => {
+  await prisma.article.deleteMany();
+  await prisma.source.deleteMany();
   await prisma.$disconnect();
 });
 

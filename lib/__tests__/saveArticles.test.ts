@@ -50,7 +50,14 @@ beforeEach(async () => {
   sourceId = source.id;
 });
 
+afterEach(async () => {
+  await prisma.article.deleteMany();
+  await prisma.source.deleteMany();
+});
+
 afterAll(async () => {
+  await prisma.article.deleteMany();
+  await prisma.source.deleteMany();
   await prisma.$disconnect();
 });
 
@@ -112,7 +119,8 @@ describe('saveArticles', () => {
       const saved = await prisma.article.findFirst({
         where: { guid: 'null-desc-guid' },
       });
-      expect(saved?.description).toBeNull();
+      expect(saved).not.toBeNull();
+      expect(saved!.description).toBeNull();
     });
 
     it('stores null thumbnail fields when thumbnail is absent', async () => {

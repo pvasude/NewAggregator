@@ -39,12 +39,18 @@ function makeArticle(sourceId: number, overrides: Record<string, unknown> = {}) 
 // ---------------------------------------------------------------------------
 
 beforeEach(async () => {
-  // Delete in FK-safe order: children before parents
+  await prisma.article.deleteMany();
+  await prisma.source.deleteMany();
+});
+
+afterEach(async () => {
   await prisma.article.deleteMany();
   await prisma.source.deleteMany();
 });
 
 afterAll(async () => {
+  await prisma.article.deleteMany();
+  await prisma.source.deleteMany();
   await prisma.$disconnect();
 });
 

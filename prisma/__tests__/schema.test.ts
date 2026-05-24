@@ -1,8 +1,10 @@
 import { PrismaClient } from '../../lib/generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 
+// Load from environment — set TEST_DATABASE_URL in GitHub Secrets for CI,
+// or export it locally. Falls back to DATABASE_URL if TEST_DATABASE_URL is absent.
 const TEST_DATABASE_URL =
-  'postgresql://preetivasudevan@localhost:5432/newsaggregator_test';
+  process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL ?? '';
 
 const adapter = new PrismaPg({ connectionString: TEST_DATABASE_URL });
 const prisma = new PrismaClient({ adapter });

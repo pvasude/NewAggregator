@@ -172,7 +172,7 @@ describe('saveArticles', () => {
       const newOne = makeArticle({ guid: 'brand-new' });
       await saveArticles(sourceId, [existing, newOne]);
 
-      const total = await prisma.article.count();
+      const total = await prisma.article.count({ where: { sourceId } });
       expect(total).toBe(2);
     });
   });

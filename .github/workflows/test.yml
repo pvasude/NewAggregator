@@ -2,8 +2,6 @@ name: Test
 
 on:
   pull_request:
-    branches: [phase-2-wip, main]
-  pull_request:
 
 jobs:
   test:

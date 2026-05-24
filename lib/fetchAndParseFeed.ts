@@ -65,7 +65,18 @@ function stripHashSuffix(guid: string): string {
 // ---------------------------------------------------------------------------
 
 export async function fetchAndParseFeed(url: string): Promise<ParsedArticle[]> {
-  const response = await fetch(url);
+  let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutHandle = setTimeout(
+      () => reject(new Error(`Feed fetch timed out after 10s: ${url}`)),
+      10_000
+    );
+  });
+
+  const response = await Promise.race([fetch(url), timeoutPromise]).finally(() => {
+    clearTimeout(timeoutHandle);
+  });
 
   if (!response.ok) {
     throw new Error(`Feed fetch failed: HTTP ${response.status}`);

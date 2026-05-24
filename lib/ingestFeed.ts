@@ -1,26 +1,20 @@
-import { PrismaClient } from './generated/prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
+import { prisma } from './prisma';
 import { fetchAndParseFeed } from './fetchAndParseFeed';
 import { saveArticles } from './saveArticles';
 
-let _prisma: PrismaClient | null = null;
-
-function getDb(): PrismaClient {
-  if (!_prisma) {
-    const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
-    _prisma = new PrismaClient({ adapter });
-  }
-  return _prisma;
-}
-
 export async function ingestFeed(sourceId: number, feedUrl: string): Promise<number> {
-  const articles = await fetchAndParseFeed(feedUrl);
-  const count = await saveArticles(sourceId, articles);
+  try {
+    const articles = await fetchAndParseFeed(feedUrl);
+    const count = await saveArticles(sourceId, articles);
 
-  await getDb().source.update({
-    where: { id: sourceId },
-    data: { lastFetchedAt: new Date() },
-  });
+    await prisma.source.update({
+      where: { id: sourceId },
+      data: { lastFetchedAt: new Date() },
+    });
 
-  return count;
+    return count;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    throw new Error(`Ingest failed for source ${sourceId} (${feedUrl}): ${message}`, { cause: err });
+  }
 }

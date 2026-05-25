@@ -4,7 +4,6 @@ module.exports = {
   testEnvironment: 'node',
   forceExit: true,
   globalSetup: '<rootDir>/jest.global-setup.js',
-  globalTeardown: '<rootDir>/jest.global-teardown.js',
   setupFiles: ['<rootDir>/jest.setup-env.js'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testMatch: [

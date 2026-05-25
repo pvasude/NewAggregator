@@ -1,17 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Bookmark, BookmarkCheck, ArrowUpRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ArrowUpRight } from "lucide-react";
 import type { Article } from "@/lib/data";
 
 interface ArticleCardProps {
   article: Article;
-  bookmarked: boolean;
-  onBookmark: (id: number) => void;
 }
 
-export function ArticleCard({ article, bookmarked, onBookmark }: ArticleCardProps) {
+export function ArticleCard({ article }: ArticleCardProps) {
   const [imgError, setImgError] = useState(false);
   const showPlaceholder = !article.imageUrl || imgError;
 
@@ -66,21 +63,6 @@ export function ArticleCard({ article, bookmarked, onBookmark }: ArticleCardProp
           </span>
 
           <div className="flex items-center gap-0.5">
-            <button
-              onClick={() => onBookmark(article.id)}
-              className={cn(
-                "p-1.5 rounded hover:bg-stone-100 transition-colors",
-                bookmarked ? "text-stone-900" : "text-stone-400 hover:text-stone-600"
-              )}
-              aria-label={bookmarked ? "Remove bookmark" : "Bookmark article"}
-            >
-              {bookmarked ? (
-                <BookmarkCheck className="h-4 w-4 fill-current" />
-              ) : (
-                <Bookmark className="h-4 w-4" />
-              )}
-            </button>
-
             <a
               href={article.url}
               target="_blank"

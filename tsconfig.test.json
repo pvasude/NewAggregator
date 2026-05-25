@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "lib": ["ES2022"],
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["prisma/__tests__/**/*.ts", "lib/**/*.ts", "app/**/*.ts"],
+  "exclude": ["node_modules", ".next"]
+}

@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Source {
+  id            Int       @id @default(autoincrement())
+  name          String
+  url           String
+  language      String
+  lastFetchedAt DateTime?
+  createdAt     DateTime  @default(now())
+  sourceColor   String
+
+  articles Article[]
+}
+
+model Article {
+  id           Int       @id @default(autoincrement())
+  sourceId     Int
+  title        String
+  description  String?
+  link         String
+  guid         String    @unique
+  pubDate      DateTime
+  thumbnailUrl String?
+  thumbnailW   Int?
+  thumbnailH   Int?
+  createdAt    DateTime  @default(now())
+
+  source Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+}

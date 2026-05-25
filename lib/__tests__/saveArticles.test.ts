@@ -75,7 +75,7 @@ describe('saveArticles', () => {
 
       await saveArticles(sourceId, articles);
 
-      const saved = await prisma.article.findMany();
+      const saved = await prisma.article.findMany({ where: { sourceId } });
       expect(saved).toHaveLength(3);
     });
 
@@ -189,9 +189,9 @@ describe('saveArticles', () => {
       const article = makeArticle({ guid: 'pre-existing' });
       await saveArticles(sourceId, [article]);
 
-      const countBefore = await prisma.article.count();
+      const countBefore = await prisma.article.count({ where: { sourceId } });
       await saveArticles(sourceId, []);
-      const countAfter = await prisma.article.count();
+      const countAfter = await prisma.article.count({ where: { sourceId } });
 
       expect(countAfter).toBe(countBefore);
     });

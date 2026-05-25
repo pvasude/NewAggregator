@@ -3,6 +3,7 @@ module.exports = {
   extensionsToTreatAsEsm: ['.ts'],
   testEnvironment: 'node',
   forceExit: true,
+  maxWorkers: 1,
   globalSetup: '<rootDir>/jest.global-setup.js',
   setupFiles: ['<rootDir>/jest.setup-env.js'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],

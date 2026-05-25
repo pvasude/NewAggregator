@@ -1,17 +1,17 @@
 'use strict';
 const { execSync } = require('child_process');
-const { config } = require('dotenv');
-const path = require('path');
 
-// Load .env so TEST_DATABASE_URL is available when running locally.
-config({ path: path.join(__dirname, '.env') });
-
+// TEST_DATABASE_URL is set by the CI workflow env (test.yml) or locally via
+// `export TEST_DATABASE_URL=...`. No .env loading needed — dotenv is not used
+// here to avoid overriding CI environment variables.
+// To set locally: export TEST_DATABASE_URL=postgresql://user:pass@localhost:5432/db_test
+// In CI: add TEST_DATABASE_URL to GitHub Secrets and reference in test.yml env block.
 module.exports = async function globalSetup() {
   const testDbUrl = process.env.TEST_DATABASE_URL;
   if (!testDbUrl) {
     throw new Error(
       'TEST_DATABASE_URL must be set to run tests. ' +
-      'Add it to .env locally, or to GitHub Secrets for CI.'
+      'Add it to GitHub Secrets for CI, or export it locally.'
     );
   }
 
